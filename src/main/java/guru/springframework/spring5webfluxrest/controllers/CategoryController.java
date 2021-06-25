@@ -8,51 +8,87 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 /**
- * Created by jt on 12/24/17.
+ * The type Category controller.
  */
 @RestController
 public class CategoryController {
 
-    private final CategoryRepository categoryRepository;
+    private final CategoryRepository categoryRepo;
 
-    public CategoryController(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
+    /**
+     * Instantiates a new Category controller.
+     *
+     * @param categoryRepo the category repository
+     */
+    public CategoryController(CategoryRepository categoryRepo) {
+        this.categoryRepo = categoryRepo;
     }
 
+    /**
+     * List flux.
+     *
+     * @return the flux
+     */
     @GetMapping("/api/v1/categories")
-    Flux<Category> list(){
-        return categoryRepository.findAll();
+    Flux<Category> list() {
+        return categoryRepo.findAll();
     }
 
+    /**
+     * Gets by id.
+     *
+     * @param id the id
+     * @return the by id
+     */
     @GetMapping("/api/v1/categories/{id}")
-    Mono<Category> getById(@PathVariable String id){
-        return categoryRepository.findById(id);
+    Mono<Category> getById(@PathVariable String id) {
+        return categoryRepo.findById(id);
     }
 
+    /**
+     * Create mono.
+     *
+     * @param categoryStream the category stream
+     * @return the mono
+     */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/api/v1/categories")
-    Mono<Void> create(@RequestBody Publisher<Category> categoryStream){
-        return categoryRepository.saveAll(categoryStream).then();
+    Mono<Void> create(@RequestBody Publisher<Category> categoryStream) {
+        return categoryRepo.saveAll(categoryStream).then();
     }
 
+    /**
+     * Update mono.
+     *
+     * @param id       the id
+     * @param category the category
+     * @return the mono
+     */
     @PutMapping("/api/v1/categories/{id}")
     Mono<Category> update(@PathVariable String id, @RequestBody Category category) {
         category.setId(id);
-        return categoryRepository.save(category);
+        return categoryRepo.save(category);
     }
 
+    /**
+     * Patch mono.
+     *
+     * @param id       the id
+     * @param category the category
+     * @return the mono
+     */
     @PatchMapping("/api/v1/categories/{id}")
     Mono<Category> patch(@PathVariable String id, @RequestBody Category category) {
 
-        Category foundCategory = categoryRepository.findById(id).block();
+        Category foundC = categoryRepo.findById(id).block();
 
-        if(foundCategory.getDescription() != category.getDescription()){
-            foundCategory.setDescription(category.getDescription());
-            return categoryRepository.save(foundCategory);
+        if (foundC.getDescription() != category.getDescription()) {
+            foundC.setDescription(category.getDescription());
+            return categoryRepo.save(foundC);
         }
 
-        return Mono.just(foundCategory);
+        return Mono.just(foundC);
     }
-
 }
