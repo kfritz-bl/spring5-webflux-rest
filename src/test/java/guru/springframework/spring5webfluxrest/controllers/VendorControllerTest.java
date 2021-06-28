@@ -31,7 +31,6 @@ public class VendorControllerTest {
 
     @Test
     public void list() {
-
         given(vendorRepository.findAll())
                 .willReturn(Flux.just(Vendor.builder().firstName("Fred").lastName("Flintstone").build(),
                         Vendor.builder().firstName("Barney").lastName("Rubble").build()));
@@ -55,24 +54,23 @@ public class VendorControllerTest {
     }
 
     @Test
-    public void testCreateVendor() {
+    public void testCreate() {
         given(vendorRepository.saveAll(any(Publisher.class)))
                 .willReturn(Flux.just(Vendor.builder().build()));
 
-        Mono<Vendor> vendorToSaveMono = Mono.just(Vendor.builder().firstName("First Name")
+        Mono<Vendor> vendorMonoToSave = Mono.just(Vendor.builder().firstName("First Name")
                                                 .lastName("Last Name").build());
 
         webTestClient.post()
                 .uri("/api/v1/vendors")
-                .body(vendorToSaveMono, Vendor.class)
+                .body(vendorMonoToSave, Vendor.class)
                 .exchange()
                 .expectStatus()
                 .isCreated();
     }
 
     @Test
-    public void testUpdateVendor() {
-
+    public void testUpdate() {
         given(vendorRepository.save(any(Vendor.class)))
                 .willReturn(Mono.just(Vendor.builder().build()));
 
@@ -84,12 +82,10 @@ public class VendorControllerTest {
                 .exchange()
                 .expectStatus()
                 .isOk();
-
     }
 
     @Test
-    public void testPatchVendorWithChanges() {
-
+    public void testPatchWithChanges() {
         given(vendorRepository.findById(anyString()))
                 .willReturn(Mono.just(Vendor.builder().firstName("Jimmy").build()));
 
@@ -109,8 +105,7 @@ public class VendorControllerTest {
     }
 
     @Test
-    public void testPatchVendorWithoutChanges() {
-
+    public void testPatchNoChanges() {
         given(vendorRepository.findById(anyString()))
                 .willReturn(Mono.just(Vendor.builder().firstName("Jimmy").build()));
 

@@ -56,15 +56,15 @@ public class CategoryControllerTest {
 
 
     @Test
-    public void testCreateCateogry() {
+    public void testCreate() {
         given(categoryRepository.saveAll(any(Publisher.class)))
                 .willReturn(Flux.just(Category.builder().description("descrp").build()));
 
-        Mono<Category> catToSaveMono = Mono.just(Category.builder().description("Some Cat").build());
+        Mono<Category> catMonoToSave = Mono.just(Category.builder().description("Some Cat").build());
 
         webTestClient.post()
                 .uri("/api/v1/categories")
-                .body(catToSaveMono, Category.class)
+                .body(catMonoToSave, Category.class)
                 .exchange()
                 .expectStatus()
                 .isCreated();
@@ -75,11 +75,11 @@ public class CategoryControllerTest {
         given(categoryRepository.save(any(Category.class)))
                 .willReturn(Mono.just(Category.builder().build()));
 
-        Mono<Category> catToUpdateMono = Mono.just(Category.builder().description("Some Cat").build());
+        Mono<Category> catMonoToUpdate = Mono.just(Category.builder().description("Some Cat").build());
 
         webTestClient.put()
                 .uri("/api/v1/categories/asdfasdf")
-                .body(catToUpdateMono, Category.class)
+                .body(catMonoToUpdate, Category.class)
                 .exchange()
                 .expectStatus()
                 .isOk();
@@ -93,15 +93,16 @@ public class CategoryControllerTest {
         given(categoryRepository.save(any(Category.class)))
                 .willReturn(Mono.just(Category.builder().build()));
 
-        Mono<Category> catToUpdateMono = Mono.just(Category.builder().description("New Description").build());
+        Mono<Category> catMonoToUpdate = Mono.just(Category.builder().description("New Description").build());
 
         webTestClient.patch()
                 .uri("/api/v1/categories/asdfasdf")
-                .body(catToUpdateMono, Category.class)
+                .body(catMonoToUpdate, Category.class)
                 .exchange()
                 .expectStatus()
                 .isOk();
 
+        // Verify the save is invoked.
         verify(categoryRepository).save(any());
     }
 
@@ -113,15 +114,16 @@ public class CategoryControllerTest {
         given(categoryRepository.save(any(Category.class)))
                 .willReturn(Mono.just(Category.builder().build()));
 
-        Mono<Category> catToUpdateMono = Mono.just(Category.builder().build());
+        Mono<Category> catMonoToUpdate = Mono.just(Category.builder().build());
 
         webTestClient.patch()
                 .uri("/api/v1/categories/asdfasdf")
-                .body(catToUpdateMono, Category.class)
+                .body(catMonoToUpdate, Category.class)
                 .exchange()
                 .expectStatus()
                 .isOk();
 
+        // Verify the save is not invoked.
         verify(categoryRepository, never()).save(any());
     }
 }

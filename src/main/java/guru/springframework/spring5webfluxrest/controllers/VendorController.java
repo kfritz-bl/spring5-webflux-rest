@@ -82,7 +82,6 @@ public class VendorController {
      */
     @PatchMapping("api/v1/vendors/{id}")
     Mono<Vendor> patch(@PathVariable String id, @RequestBody Vendor vendor) {
-
         Vendor foundV = vendorRepo.findById(id).block();
 
         if (!foundV.getFirstName().equals(vendor.getFirstName())) {

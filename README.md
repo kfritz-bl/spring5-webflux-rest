@@ -7,3 +7,11 @@ The source code in this repository is to support my course [Spring Framework 5: 
 WebFlux is a web framework new to Spring Framework 5. Learn more about Spring WebFlux and reactive programming in my course!
 
 You can learn more about the Spring Framework at my website [Spring Framework Guru](https://springframework.guru)
+
+This example requires a local instance of MongoDB running in Docker on port 27017.
+
+```
+docker pull mongo
+docker run -p 27017:27017 --name mongo -d mongo:latest
+docker ps
+```
